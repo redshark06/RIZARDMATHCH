@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LizardMatch - 종 상세 정보</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦎 LizardMatch</h1>
+            <p class="subtitle">파충류/양서류 종 추천 서비스</p>
+        </header>
+
+        <main class="detail-container">
+            <div id="loadingMessage" class="loading-message">정보를 불러오는 중...</div>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="detailContent" class="detail-content">
+                <!-- 동적으로 생성됨 -->
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="backBtn" class="btn btn-secondary">결과로 돌아가기</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // 페이지 로드 시 종 정보 가져오기
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const speciesName = urlParams.get('species');
+            
+            if (!speciesName) {
+                document.getElementById('errorMessage').textContent = '종 이름이 제공되지 않았습니다.';
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('loadingMessage').style.display = 'none';
+                return;
+            }
+
+            try {
+                const apiBaseUrl = getApiBaseUrl();
+                const response = await fetch(`${apiBaseUrl}/api/species/${encodeURIComponent(speciesName)}`);
+                
+                if (!response.ok) {
+                    throw new Error('종 정보를 가져올 수 없습니다.');
+                }
+
+                const species = await response.json();
+                displaySpeciesDetail(species);
+            } catch (e) {
+                console.error('오류:', e);
+                document.getElementById('errorMessage').textContent = '종 정보를 불러올 수 없습니다.';
+                document.getElementById('errorMessage').style.display = 'block';
+            } finally {
+                document.getElementById('loadingMessage').style.display = 'none';
+            }
+        });
+
+        function isEmpty(value) {
+            return value === null || value === undefined || value === '';
+        }
+
+        function parseHumidityRange(rangeStr) {
+            if (!rangeStr) return null;
+            const nums = (rangeStr.match(/\d+/g) || []).map(n => parseInt(n, 10)).filter(n => !isNaN(n));
+            if (nums.length === 0) return null;
+            let min = Math.min(...nums);
+            let max = Math.max(...nums);
+            return { min, max };
+        }
+
+        function buildFailureTips(species) {
+            const tips = [];
+
+            // 과습 위험
+            const humRange = parseHumidityRange(species.습도_범위);
+            if (humRange && humRange.max >= 80) {
+                tips.push({
+                    title: '과습/곰팡이 주의',
+                    desc: '습도가 높은 종이라 환기와 바닥재 관리가 중요합니다. 환기 구멍과 제습 환경을 함께 고려해주세요.'
+                });
+            }
+
+            // 건조 위험
+            if (humRange && humRange.min <= 40) {
+                tips.push({
+                    title: '건조/탈피 실패 주의',
+                    desc: '습도가 낮으면 탈피 실패나 피부 건조가 생길 수 있습니다. 은신처와 부분 가습(분무/습은신처)을 준비해주세요.'
+                });
+            }
+
+            // 온습도 난이도 높음
+            if (species.온도습도_5단계 && Number(species.온도습도_5단계) >= 4) {
+                tips.push({
+                    title: '세팅 난이도 높음',
+                    desc: '온도/습도 관리가 까다로운 종입니다. 온습도계, 서모스탯, 타이머 등 자동화 장비 사용을 권장합니다.'
+                });
+            }
+
+            // 핸들링 스트레스
+            if (species.핸들링적합도_5단계 && Number(species.핸들링적합도_5단계) <= 2) {
+                tips.push({
+                    title: '핸들링 최소화 권장',
+                    desc: '손을 많이 타지 않는 종이라 잦은 핸들링은 스트레스를 줄 수 있습니다. 관상 위주로 감상해 주세요.'
+                });
+            }
+
+            return tips;
+        }
+
+        function displaySpeciesDetail(species) {
+            const detailContent = document.getElementById('detailContent');
+            
+            let html = '<div class="species-detail">';
+
+            // A. 헤더 영역
+            html += '<section class="detail-section header-section">';
+            html += `<h2>${species.종_한글명 || '이름 없음'}</h2>`;
+            if (species.사진_URL) {
+                const imageUrl = convertWikipediaImageUrl(species.사진_URL);
+                html += `<img src="${imageUrl}" alt="${species.종_한글명}" onerror="handleImageError(this)" class="species-image">`;
+            }
+            html += '<div class="badge-row">';
+            if (!isEmpty(species.종류)) {
+                html += `<span class="badge badge-type">${species.종류}</span>`;
+            }
+            if (!isEmpty(species.관상용_애완용)) {
+                html += `<span class="badge badge-purpose">${species.관상용_애완용}</span>`;
+            }
+            html += '</div>';
+            html += '</section>';
+
+            // B. 핵심 요약 카드 (5지표)
+            html += '<section class="detail-section summary-section">';
+            html += '<h3>핵심 요약</h3>';
+            html += '<div class="summary-grid">';
+            html += `<div class="summary-item"><span class="label">사육 난이도</span><span class="value">${species.사육_난이도_5단계 || '-'}/5</span></div>`;
+            html += `<div class="summary-item"><span class="label">초기 비용</span><span class="value">${species.초기비용_등급_5단계 || '-'}/5</span></div>`;
+            html += `<div class="summary-item"><span class="label">핸들링 적합도</span><span class="value">${species.핸들링적합도_5단계 || '-'}/5</span></div>`;
+            html += `<div class="summary-item"><span class="label">성체 크기</span><span class="value">${species.성체크기_등급_3단계 || '-'}/3</span></div>`;
+            html += `<div class="summary-item"><span class="label">사육장 크기</span><span class="value">${species.사육장_사이즈_3단계 || '-'}/3</span></div>`;
+            html += '</div>';
+            html += '</section>';
+
+            // C. 사육 환경 카드
+            const hasEnv =
+                !isEmpty(species.온도_범위_주간) ||
+                !isEmpty(species.온도_범위_야간) ||
+                !isEmpty(species.바스킹_온도) ||
+                !isEmpty(species.습도_범위) ||
+                !isEmpty(species.온도습도_5단계) ||
+                !isEmpty(species.온습도_점검_주기);
+
+            if (hasEnv) {
+                html += '<section class="detail-section env-section">';
+                html += '<h3>사육 환경</h3>';
+                html += '<div class="detail-info">';
+                if (!isEmpty(species.온도_범위_주간)) {
+                    html += `<p><strong>주간 온도:</strong> ${species.온도_범위_주간}</p>`;
+                }
+                if (!isEmpty(species.온도_범위_야간)) {
+                    html += `<p><strong>야간 온도:</strong> ${species.온도_범위_야간}</p>`;
+                }
+                if (!isEmpty(species.바스킹_온도)) {
+                    html += `<p><strong>바스킹 온도:</strong> ${species.바스킹_온도}</p>`;
+                }
+                if (!isEmpty(species.습도_범위)) {
+                    html += `<p><strong>습도 범위:</strong> ${species.습도_범위}</p>`;
+                }
+                if (!isEmpty(species.온도습도_5단계)) {
+                    html += `<p><strong>온습도 난이도:</strong> ${species.온도습도_5단계}/5</p>`;
+                }
+                if (!isEmpty(species.온습도_점검_주기)) {
+                    html += `<p><strong>온습도 점검 주기:</strong> ${species.온습도_점검_주기}</p>`;
+                }
+                html += '</div>';
+                html += '</section>';
+            }
+
+            // D. 케어 루틴 카드
+            const hasRoutine =
+                !isEmpty(species.급여_주기) ||
+                !isEmpty(species.급여_구성) ||
+                !isEmpty(species.먹이빈도_등급) ||
+                !isEmpty(species.물_급여) ||
+                !isEmpty(species.분무_주기) ||
+                !isEmpty(species.청소_주기);
+
+            if (hasRoutine) {
+                html += '<section class="detail-section routine-section">';
+                html += '<h3>케어 루틴</h3>';
+                html += '<div class="detail-info">';
+                if (!isEmpty(species.급여_주기)) {
+                    html += `<p><strong>급여 주기:</strong> ${species.급여_주기}</p>`;
+                }
+                if (!isEmpty(species.급여_구성)) {
+                    html += `<p><strong>급여 구성:</strong> ${species.급여_구성}</p>`;
+                }
+                if (!isEmpty(species.먹이빈도_등급)) {
+                    html += `<p><strong>먹이 빈도 등급:</strong> ${species.먹이빈도_등급}</p>`;
+                }
+                if (!isEmpty(species.물_급여)) {
+                    html += `<p><strong>물 급여 방식:</strong> ${species.물_급여}</p>`;
+                }
+                if (!isEmpty(species.분무_주기)) {
+                    html += `<p><strong>분무 주기:</strong> ${species.분무_주기}</p>`;
+                }
+                if (!isEmpty(species.청소_주기)) {
+                    html += `<p><strong>청소 주기:</strong> ${species.청소_주기}</p>`;
+                }
+                html += '</div>';
+                html += '</section>';
+            }
+
+            // E. 먹이/식성 카드
+            const hasDiet = !isEmpty(species.식성타입) || !isEmpty(species.급여_구성);
+            if (hasDiet) {
+                html += '<section class="detail-section diet-section">';
+                html += '<h3>먹이 / 식성</h3>';
+                html += '<div class="detail-info">';
+                if (!isEmpty(species.식성타입)) {
+                    html += `<p><strong>식성 타입:</strong> ${species.식성타입}</p>`;
+                }
+                if (!isEmpty(species.급여_구성)) {
+                    html += `<p><strong>급여 구성:</strong> ${species.급여_구성}</p>`;
+                }
+                html += '</div>';
+                html += '</section>';
+            }
+
+            // F. 성향/활동 카드
+            const hasBehavior =
+                !isEmpty(species.활동패턴) ||
+                !isEmpty(species.외형태그) ||
+                !isEmpty(species.핸들링적합도_5단계);
+
+            if (hasBehavior) {
+                html += '<section class="detail-section behavior-section">';
+                html += '<h3>성향 / 활동</h3>';
+                html += '<div class="detail-info">';
+                if (!isEmpty(species.활동패턴)) {
+                    html += `<p><strong>활동 패턴:</strong> ${species.활동패턴}</p>`;
+                }
+                if (!isEmpty(species.외형태그)) {
+                    html += `<p><strong>외형 태그:</strong> ${species.외형태그}</p>`;
+                }
+                if (!isEmpty(species.핸들링적합도_5단계)) {
+                    html += `<p><strong>핸들링 적합도:</strong> ${species.핸들링적합도_5단계}/5</p>`;
+                }
+                html += '</div>';
+                html += '</section>';
+            }
+
+            // G. 법/주의 + 실패 포인트 & 해결 팁
+            const tips = buildFailureTips(species);
+            const hasLawOrTips = !isEmpty(species.CITES_등재_여부) || tips.length > 0;
+            if (hasLawOrTips) {
+                html += '<section class="detail-section law-section">';
+                html += '<h3>법 / 주의 사항</h3>';
+                if (!isEmpty(species.CITES_등재_여부)) {
+                    html += `<p><strong>CITES 등재 여부:</strong> ${species.CITES_등재_여부}</p>`;
+                }
+                if (tips.length > 0) {
+                    html += '<div class="failure-tips">';
+                    html += '<h4>흔한 실패 포인트 & 해결 팁</h4>';
+                    html += '<ul>';
+                    tips.forEach(t => {
+                        html += `<li><strong>${t.title}</strong> - ${t.desc}</li>`;
+                    });
+                    html += '</ul>';
+                    html += '</div>';
+                }
+                html += '</section>';
+            }
+
+            // H. 구매/참고 링크 카드
+            if (!isEmpty(species.구매_가능_전문샵_링크)) {
+                html += '<section class="detail-section shop-section">';
+                html += '<h3>구매/참고 링크</h3>';
+                html += `<p><a href="${species.구매_가능_전문샵_링크}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">전문 샵에서 자세히 보기</a></p>`;
+                html += '</section>';
+            }
+
+            // I. 데이터 신뢰/업데이트 카드
+            const hasMeta =
+                !isEmpty(species.추출_신뢰도_점수) ||
+                !isEmpty(species.최종_검수_상태) ||
+                !isEmpty(species.최종_갱신일);
+
+            if (hasMeta) {
+                html += '<section class="detail-section meta-section">';
+                html += '<h3>데이터 신뢰 / 업데이트</h3>';
+                html += '<div class="detail-info">';
+                if (!isEmpty(species.추출_신뢰도_점수)) {
+                    html += `<p><strong>추출 신뢰도 점수:</strong> ${species.추출_신뢰도_점수}</p>`;
+                }
+                if (!isEmpty(species.최종_검수_상태)) {
+                    html += `<p><strong>최종 검수 상태:</strong> ${species.최종_검수_상태}</p>`;
+                }
+                if (!isEmpty(species.최종_갱신일)) {
+                    html += `<p><strong>최종 갱신일:</strong> ${species.최종_갱신일}</p>`;
+                }
+                html += '</div>';
+                html += '</section>';
+            }
+
+            html += '</div>'; // species-detail
+            
+            detailContent.innerHTML = html;
+        }
+
+        // 결과로 돌아가기 버튼
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.history.back();
+        });
+    </script>
+</body>
+</html>
+
