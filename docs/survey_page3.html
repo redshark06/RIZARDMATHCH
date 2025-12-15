@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LizardMatch - 목적 및 취향</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦎 LizardMatch</h1>
+            <p class="subtitle">파충류/양서류 종 추천 서비스</p>
+        </header>
+
+        <div class="progress-indicator">
+            <span class="progress-text">3 / 4</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%"></div>
+            </div>
+        </div>
+
+        <main class="survey-container">
+            <form id="surveyForm" class="survey-form">
+                <div class="question-group">
+                    <h2>Q8. 사육 목적</h2>
+                    <p class="question-description">
+                        어떤 목적으로 키우고 싶으신지 선택하세요. 관상용은 보는 것을 즐기는 용도, 애완용은 교감과 놀이를 즐기는 용도입니다.
+                    </p>
+                    <select name="관상용_애완용" class="form-select">
+                        <option value="">선택하세요</option>
+                        <option value="관상용">관상용 - 보는 것을 즐기는 용도</option>
+                        <option value="애완용">애완용 - 교감과 놀이를 즐기는 용도</option>
+                        <option value="둘 다">둘 다 - 관상과 애완 모두 가능</option>
+                    </select>
+                    <div class="importance-group">
+                        <label>중요도: <span class="importance-help">이 질문이 추천 결과에 얼마나 영향을 미칠지 설정합니다. 높을수록 더 중요하게 반영됩니다.</span></label>
+                        <div class="importance-radio-group">
+                            <label><input type="radio" name="관상용_애완용_중요도" value="0"> 0 (무시)</label>
+                            <label><input type="radio" name="관상용_애완용_중요도" value="1"> 1 (매우 낮음)</label>
+                            <label><input type="radio" name="관상용_애완용_중요도" value="5"> 5 (낮음)</label>
+                            <label><input type="radio" name="관상용_애완용_중요도" value="10" checked> 10 (보통)</label>
+                            <label><input type="radio" name="관상용_애완용_중요도" value="15"> 15 (높음)</label>
+                            <label><input type="radio" name="관상용_애완용_중요도" value="20"> 20 (매우 높음)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <h2>Q9. 식성 타입</h2>
+                    <p class="question-description">
+                        어떤 종류의 먹이를 주는지에 대한 선호도를 의미합니다. 먹이 준비의 편의성과 비용을 고려할 수 있습니다.
+                    </p>
+                    <select name="식성타입" class="form-select">
+                        <option value="">상관없음</option>
+                        <option value="잡식">잡식 - 식물과 동물 모두 섭취</option>
+                        <option value="초식">초식 - 식물만 섭취</option>
+                        <option value="육식">육식 - 동물성 먹이만 섭취</option>
+                    </select>
+                    <div class="importance-group">
+                        <label>중요도: <span class="importance-help">이 질문이 추천 결과에 얼마나 영향을 미칠지 설정합니다. 높을수록 더 중요하게 반영됩니다.</span></label>
+                        <div class="importance-radio-group">
+                            <label><input type="radio" name="식성타입_중요도" value="0"> 0 (무시)</label>
+                            <label><input type="radio" name="식성타입_중요도" value="1"> 1 (매우 낮음)</label>
+                            <label><input type="radio" name="식성타입_중요도" value="5" checked> 5 (낮음)</label>
+                            <label><input type="radio" name="식성타입_중요도" value="10"> 10 (보통)</label>
+                            <label><input type="radio" name="식성타입_중요도" value="15"> 15 (높음)</label>
+                            <label><input type="radio" name="식성타입_중요도" value="20"> 20 (매우 높음)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-group">
+                    <h2>Q10. 외형 태그</h2>
+                    <p class="question-description">
+                        선호하는 외형의 특징을 선택하세요. 복수 선택이 가능하며, 선택한 태그와 일치하는 종을 우선 추천해드립니다.
+                    </p>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="외형태그" value="귀엽다">
+                            <span>귀엽다 - 사랑스럽고 귀여운 외형</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="외형태그" value="화려하다">
+                            <span>화려하다 - 눈에 띄고 화사한 색상과 패턴</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="외형태그" value="멋있다">
+                            <span>멋있다 - 강인하고 멋진 외형</span>
+                        </label>
+                    </div>
+                    <div class="importance-group">
+                        <label>중요도: <span class="importance-help">이 질문이 추천 결과에 얼마나 영향을 미칠지 설정합니다. 높을수록 더 중요하게 반영됩니다.</span></label>
+                        <div class="importance-radio-group">
+                            <label><input type="radio" name="외형태그_중요도" value="0"> 0 (무시)</label>
+                            <label><input type="radio" name="외형태그_중요도" value="1"> 1 (매우 낮음)</label>
+                            <label><input type="radio" name="외형태그_중요도" value="5" checked> 5 (낮음)</label>
+                            <label><input type="radio" name="외형태그_중요도" value="10"> 10 (보통)</label>
+                            <label><input type="radio" name="외형태그_중요도" value="15"> 15 (높음)</label>
+                            <label><input type="radio" name="외형태그_중요도" value="20"> 20 (매우 높음)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="prevBtn" class="btn btn-secondary">이전</button>
+                    <button type="button" id="nextBtn" class="btn btn-primary">다음</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="survey_navigation.js"></script>
+    <script>
+        // 페이지 로드 시 저장된 데이터 복원
+        document.addEventListener('DOMContentLoaded', () => {
+            restoreCurrentPageData();
+            setupAutoImportanceReset();
+        });
+
+        // "상관없음" 선택 시 중요도 자동 0 설정
+        function setupAutoImportanceReset() {
+            const selects = document.querySelectorAll('.form-select');
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    if (this.value === '') {
+                        // "상관없음" 선택 시 해당 질문의 중요도를 0으로 설정
+                        const questionName = this.name;
+                        const importanceName = questionName + '_중요도';
+                        const importanceRadio = document.querySelector(`input[name="${importanceName}"][value="0"]`);
+                        if (importanceRadio) {
+                            importanceRadio.checked = true;
+                        }
+                    }
+                });
+            });
+        }
+
+        // 이전 버튼
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            saveCurrentPageData();
+            goToPreviousPage();
+        });
+
+        // 다음 버튼
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            saveCurrentPageData();
+            goToNextPage();
+        });
+    </script>
+</body>
+</html>
+

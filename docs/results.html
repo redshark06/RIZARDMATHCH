@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LizardMatch - 추천 결과</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦎 LizardMatch</h1>
+            <p class="subtitle">파충류/양서류 종 추천 서비스</p>
+        </header>
+
+        <main class="results-container">
+            <div id="loadingMessage" class="loading-message" style="display: none;">
+                추천 결과를 생성하는 중...
+            </div>
+
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <div id="resultsContent" class="results-content">
+                <!-- 동적으로 생성됨 -->
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="restartBtn" class="btn btn-secondary">설문 다시하기</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // 페이지 로드 시 결과 표시
+        document.addEventListener('DOMContentLoaded', () => {
+            // URL 파라미터에서 결과 데이터 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const resultsJson = urlParams.get('results');
+            
+            if (resultsJson) {
+                try {
+                    const results = JSON.parse(decodeURIComponent(resultsJson));
+                    displayResults(results);
+                } catch (e) {
+                    console.error('결과 파싱 오류:', e);
+                    document.getElementById('errorMessage').textContent = '결과를 불러올 수 없습니다.';
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            } else {
+                // sessionStorage에서 가져오기
+                const resultsStr = sessionStorage.getItem('recommendationResults');
+                if (resultsStr) {
+                    try {
+                        const results = JSON.parse(resultsStr);
+                        displayResults(results);
+                    } catch (e) {
+                        console.error('결과 파싱 오류:', e);
+                        document.getElementById('errorMessage').textContent = '결과를 불러올 수 없습니다.';
+                        document.getElementById('errorMessage').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('errorMessage').textContent = '결과를 찾을 수 없습니다.';
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            }
+        });
+
+        // 설문 다시하기 버튼
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            // sessionStorage 초기화
+            sessionStorage.clear();
+            // index.html로 이동
+            window.location.href = 'index.html?reset=true';
+        });
+    </script>
+</body>
+</html>
+
