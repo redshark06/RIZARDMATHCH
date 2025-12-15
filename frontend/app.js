@@ -3,19 +3,14 @@
 const RENDER_API_BASE_URL = 'https://rizardmathch-4.onrender.com';
 
 function getApiBaseUrl() {
-    // 배포된 백엔드 주소
-    const PROD_API_BASE = 'https://rizardmathch-4.onrender.com';
+  // 1) 로컬 개발 환경이면 localhost 사용
+  const hostname = window.location.hostname;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:5000';
+  }
 
-    const hostname = window.location.hostname;
-    const protocol = window.location.protocol;
-
-    // 로컬 개발 시에는 localhost 사용
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return 'http://localhost:5000';
-    }
-
-    // 배포된 홈페이지(깃허브 페이지, Netlify 등)에서는 항상 Render 백엔드 사용
-    return PROD_API_BASE;
+  // 2) 그 외(깃허브 페이지 포함)는 항상 Render 백엔드 사용
+  return RENDER_API_BASE_URL;
 }
 
 
