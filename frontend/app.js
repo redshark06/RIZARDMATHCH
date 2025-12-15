@@ -3,25 +3,16 @@
 const RENDER_API_BASE_URL = 'https://rizardmathch-4.onrender.com';
 
 function getApiBaseUrl() {
-    /**
-     * API 기본 URL 결정
-     * - 로컬 개발: localhost 백엔드 사용
-     * - 그 외(파일로 열거나, 정적 호스팅 등): Render 백엔드 사용
-     */
-    const hostname = window.location.hostname;
-    const protocol = window.location.protocol;
-    
-    // 개발 환경: 로컬호스트에서 프론트/백엔드 함께 실행
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return 'http://localhost:5000';
-    }
-    
-    // 그 외(배포/파일 실행 등)는 Render 백엔드로 고정
-    // file:// 인 경우에도 여기로 들어온다.
-    if (protocol === 'file:' || true) {
-        return RENDER_API_BASE_URL;
-    }
+  // 1) 로컬 개발 환경이면 localhost 사용
+  const hostname = window.location.hostname;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:5000';
+  }
+
+  // 2) 그 외(깃허브 페이지 포함)는 항상 Render 백엔드 사용
+  return RENDER_API_BASE_URL;
 }
+
 
 function convertWikipediaImageUrl(url) {
     /**
