@@ -3,27 +3,26 @@
 function getApiBaseUrl() {
     /**
      * API 기본 URL 자동 감지
-     * file:// 프로토콜 처리
+     * - 로컬 개발 시: http://localhost:5000
+     * - 배포 사이트(예: GitHub Pages, Netlify 등)에서는 PROD_API_BASE 사용
      */
+    const PROD_API_BASE = 'https://lizardmatch-backend.onrender.com'; // Render 등에 배포 후 실제 URL로 교체
+
     const protocol = window.location.protocol;
     const hostname = window.location.hostname;
-    const port = window.location.port;
-    
+
     // 개발 환경: 로컬호스트
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return `http://localhost:5000`;
+        return 'http://localhost:5000';
     }
-    
-    // file:// 프로토콜인 경우 기본 포트 사용
+
+    // file:// 프로토콜인 경우에도 로컬 백엔드 사용
     if (protocol === 'file:') {
-        return `http://localhost:5000`;
+        return 'http://localhost:5000';
     }
-    
-    // 그 외의 경우 현재 호스트 사용
-    if (port) {
-        return `${protocol}//${hostname}:${port}`;
-    }
-    return `${protocol}//${hostname}`;
+
+    // 나머지(배포 환경)는 항상 배포된 백엔드 사용
+    return PROD_API_BASE;
 }
 
 function convertWikipediaImageUrl(url) {
