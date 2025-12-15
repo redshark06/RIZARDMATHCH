@@ -1,6 +1,0 @@
-# RIZARDMATHCH 
-"# RIZARDMATHCH" 
-"# RIZARDMATHCH" 
-"# RIZARDMATHCH" 
-"# RIZARDMATHCH"      # README.md 생성/추가
-"# rizard" 
