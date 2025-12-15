@@ -255,9 +255,8 @@ async function handleFinalSubmit() {
         // 결과를 sessionStorage에 저장
         sessionStorage.setItem('recommendationResults', JSON.stringify(results));
         
-        // results.html로 이동
-        const resultsJson = encodeURIComponent(JSON.stringify(results));
-        window.location.href = `results.html?results=${resultsJson}`;
+        // 결과 페이지로 이동 (URL에 긴 쿼리스트링을 넣지 않기 위해 sessionStorage만 사용)
+        window.location.href = 'results.html';
     } catch (e) {
         console.error('제출 오류:', e);
         alert('오류가 발생했습니다: ' + e.message);
