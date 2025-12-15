@@ -1,28 +1,26 @@
 /**API 호출 및 결과 표시*/
 
+const RENDER_API_BASE_URL = 'https://rizardmathch-4.onrender.com';
+
 function getApiBaseUrl() {
     /**
-     * API 기본 URL 자동 감지
-     * - 로컬 개발 시: http://localhost:5000
-     * - 배포 사이트(예: GitHub Pages, Netlify 등)에서는 PROD_API_BASE 사용
+     * API 기본 URL 결정
+     * - 로컬 개발: localhost 백엔드 사용
+     * - 그 외(파일로 열거나, 정적 호스팅 등): Render 백엔드 사용
      */
-    const PROD_API_BASE = 'https://lizardmatch-backend.onrender.com'; // Render 등에 배포 후 실제 URL로 교체
-
-    const protocol = window.location.protocol;
     const hostname = window.location.hostname;
-
-    // 개발 환경: 로컬호스트
+    const protocol = window.location.protocol;
+    
+    // 개발 환경: 로컬호스트에서 프론트/백엔드 함께 실행
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
         return 'http://localhost:5000';
     }
-
-    // file:// 프로토콜인 경우에도 로컬 백엔드 사용
-    if (protocol === 'file:') {
-        return 'http://localhost:5000';
+    
+    // 그 외(배포/파일 실행 등)는 Render 백엔드로 고정
+    // file:// 인 경우에도 여기로 들어온다.
+    if (protocol === 'file:' || true) {
+        return RENDER_API_BASE_URL;
     }
-
-    // 나머지(배포 환경)는 항상 배포된 백엔드 사용
-    return PROD_API_BASE;
 }
 
 function convertWikipediaImageUrl(url) {
