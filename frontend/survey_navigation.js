@@ -1,9 +1,40 @@
 /**페이지 네비게이션 및 데이터 저장*/
 
+const SURVEY_PAGE_KEYS = ['page1', 'page2', 'page3', 'page4'];
+
+function clearSurveySessionData() {
+    /**설문 응답/진행 플래그 초기화 (추천 결과는 유지 가능)*/
+    SURVEY_PAGE_KEYS.forEach(k => sessionStorage.removeItem(k));
+    sessionStorage.removeItem('surveyInProgress');
+}
+
+function initSurveySessionIfNeeded() {
+    /**설문 첫 진입 시 이전 답변이 남아있지 않도록 초기화*/
+    const form = document.getElementById('surveyForm');
+    if (!form) return;
+
+    const currentPage = getCurrentPage();
+    if (currentPage !== 1) {
+        // 중간 페이지는 기존 흐름(복원) 유지
+        sessionStorage.setItem('surveyInProgress', 'true');
+        return;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const forcedReset = urlParams.get('reset') === 'true';
+    const inProgress = sessionStorage.getItem('surveyInProgress') === 'true';
+
+    // 1페이지에 새로 들어온 경우(진행중 플래그가 없거나, reset=true면) 이전 응답 제거
+    if (forcedReset || !inProgress) {
+        clearSurveySessionData();
+        sessionStorage.setItem('surveyInProgress', 'true');
+    }
+}
+
 function getCurrentPage() {
     /**현재 페이지 번호 확인*/
     const path = window.location.pathname;
-    if (path.includes('index.html') || path === '/' || path.endsWith('/')) {
+    if (path.includes('survey_page1.html')) {
         return 1;
     } else if (path.includes('survey_page2.html')) {
         return 2;
@@ -19,13 +50,19 @@ function updateProgressIndicator() {
     /**진행 상태 표시 업데이트*/
     const currentPage = getCurrentPage();
     const progressText = document.querySelector('.progress-text');
+    const progressPercent = document.querySelector('.progress-percent');
     const progressFill = document.querySelector('.progress-fill');
+    const totalPages = 4;
+    const pct = Math.round((currentPage / totalPages) * 100);
     
     if (progressText) {
-        progressText.textContent = `${currentPage} / 4`;
+        progressText.textContent = `질문 ${currentPage} / ${totalPages}`;
+    }
+    if (progressPercent) {
+        progressPercent.textContent = `${pct}%`;
     }
     if (progressFill) {
-        progressFill.style.width = `${(currentPage / 4) * 100}%`;
+        progressFill.style.width = `${pct}%`;
     }
 }
 
@@ -37,6 +74,9 @@ function saveCurrentPageData() {
     if (!form) {
         return;
     }
+    
+    // 설문 진행 플래그
+    sessionStorage.setItem('surveyInProgress', 'true');
     
     const formData = new FormData(form);
     const data = {};
@@ -130,7 +170,7 @@ function restoreCurrentPageData() {
             }
         });
         
-        // 종류 선택 시 중요도 설정 업데이트 (index.html)
+        // 종류 선택 시 중요도 설정 업데이트 (survey_page1.html)
         if (currentPage === 1) {
             const event = new Event('change');
             const speciesCheckboxes = form.querySelectorAll('input[name="종류"]');
@@ -150,7 +190,9 @@ function goToNextPage() {
     const currentPage = getCurrentPage();
     const nextPage = currentPage + 1;
     
-    if (nextPage === 2) {
+    if (nextPage === 1) {
+        window.location.href = 'survey_page1.html';
+    } else if (nextPage === 2) {
         window.location.href = 'survey_page2.html';
     } else if (nextPage === 3) {
         window.location.href = 'survey_page3.html';
@@ -165,7 +207,7 @@ function goToPreviousPage() {
     const prevPage = currentPage - 1;
     
     if (prevPage === 1) {
-        window.location.href = 'index.html';
+        window.location.href = 'survey_page1.html';
     } else if (prevPage === 2) {
         window.location.href = 'survey_page2.html';
     } else if (prevPage === 3) {
@@ -214,16 +256,14 @@ function collectAllPageData() {
 async function handleFinalSubmit() {
     /**최종 제출 처리*/
     const submitBtn = document.getElementById('submitBtn');
-    const loadingMessage = document.getElementById('loadingMessage');
+    const analysisOverlay = document.getElementById('analysisOverlay');
     
     if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = '처리 중...';
     }
     
-    if (loadingMessage) {
-        loadingMessage.style.display = 'block';
-    }
+    if (analysisOverlay) analysisOverlay.style.display = 'block';
     
     try {
         // 모든 페이지 데이터 수집
@@ -246,14 +286,18 @@ async function handleFinalSubmit() {
         });
         
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error?.message || '서버 오류가 발생했습니다');
+            const text = await response.text();
+            console.error('API 오류 응답:', response.status, text);
+            throw new Error(`서버 오류 (${response.status})`);
         }
         
         const results = await response.json();
         
         // 결과를 sessionStorage에 저장
         sessionStorage.setItem('recommendationResults', JSON.stringify(results));
+
+        // 설문 응답은 정리해서, 다시 설문 진입 시 이전 답이 남지 않게 함
+        clearSurveySessionData();
         
         // 결과 페이지로 이동 (URL에 긴 쿼리스트링을 넣지 않기 위해 sessionStorage만 사용)
         window.location.href = 'results.html';
@@ -265,14 +309,13 @@ async function handleFinalSubmit() {
             submitBtn.disabled = false;
             submitBtn.textContent = '추천 받기';
         }
-        if (loadingMessage) {
-            loadingMessage.style.display = 'none';
-        }
+        if (analysisOverlay) analysisOverlay.style.display = 'none';
     }
 }
 
 // 페이지 로드 시 진행 상태 업데이트
 document.addEventListener('DOMContentLoaded', () => {
+    initSurveySessionIfNeeded();
     updateProgressIndicator();
 });
 

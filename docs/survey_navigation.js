@@ -1,5 +1,34 @@
 /**페이지 네비게이션 및 데이터 저장*/
 
+const SURVEY_PAGE_KEYS = ['page1', 'page2', 'page3', 'page4'];
+
+function clearSurveySessionData() {
+    /**설문 응답/진행 플래그 초기화*/
+    SURVEY_PAGE_KEYS.forEach(k => sessionStorage.removeItem(k));
+    sessionStorage.removeItem('surveyInProgress');
+}
+
+function initSurveySessionIfNeeded() {
+    /**설문 첫 진입 시 이전 답변이 남아있지 않도록 초기화*/
+    const form = document.getElementById('surveyForm');
+    if (!form) return;
+
+    const currentPage = getCurrentPage();
+    if (currentPage !== 1) {
+        sessionStorage.setItem('surveyInProgress', 'true');
+        return;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const forcedReset = urlParams.get('reset') === 'true';
+    const inProgress = sessionStorage.getItem('surveyInProgress') === 'true';
+
+    if (forcedReset || !inProgress) {
+        clearSurveySessionData();
+        sessionStorage.setItem('surveyInProgress', 'true');
+    }
+}
+
 function getCurrentPage() {
     /**현재 페이지 번호 확인*/
     const path = window.location.pathname;
@@ -37,6 +66,9 @@ function saveCurrentPageData() {
     if (!form) {
         return;
     }
+    
+    // 설문 진행 플래그
+    sessionStorage.setItem('surveyInProgress', 'true');
     
     const formData = new FormData(form);
     const data = {};
@@ -246,14 +278,18 @@ async function handleFinalSubmit() {
         });
         
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error?.message || '서버 오류가 발생했습니다');
+            const text = await response.text();
+            console.error('API 오류 응답:', response.status, text);
+            throw new Error(`서버 오류 (${response.status})`);
         }
         
         const results = await response.json();
         
         // 결과를 sessionStorage에 저장
         sessionStorage.setItem('recommendationResults', JSON.stringify(results));
+
+        // 설문 응답 정리 (다시 설문 진입 시 이전 답 유지 방지)
+        clearSurveySessionData();
         
         // 결과 페이지로 이동 (URL에 긴 쿼리스트링을 넣지 않기 위해 sessionStorage만 사용)
         window.location.href = 'results.html';
@@ -273,6 +309,7 @@ async function handleFinalSubmit() {
 
 // 페이지 로드 시 진행 상태 업데이트
 document.addEventListener('DOMContentLoaded', () => {
+    initSurveySessionIfNeeded();
     updateProgressIndicator();
 });
 

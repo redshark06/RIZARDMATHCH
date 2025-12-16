@@ -234,10 +234,14 @@ class RecommendationEngine:
                     '종_한글명': row['종_한글명'],
                     '종류': row['종류'],
                     '관상용_애완용': row['관상용_애완용'],
+                    '활동패턴': row.get('활동패턴', None),
                     '사진_URL': row.get('사진_URL', ''),
                     '사진_페이지_URL': row.get('사진_페이지_URL', ''),
                     'match_score': round(score, 1),
+                    '사육_난이도_5단계': int(row.get('사육_난이도_5단계', 0)) if pd.notna(row.get('사육_난이도_5단계', None)) else None,
                     '초기비용_등급_5단계': int(row['초기비용_등급_5단계']),
+                    '사육장_사이즈_3단계': int(row.get('사육장_사이즈_3단계', 0)) if pd.notna(row.get('사육장_사이즈_3단계', None)) else None,
+                    '핸들링적합도_5단계': int(row.get('핸들링적합도_5단계', 0)) if pd.notna(row.get('핸들링적합도_5단계', None)) else None,
                     '예상_월유지비_등급_5단계': self.calculate_monthly_cost_grade(row),
                     '사육_요약': self.generate_care_summary(row)
                 }

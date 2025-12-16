@@ -198,6 +198,89 @@ def get_species(species_name):
         }), 500
 
 
+@app.route('/api/species/list', methods=['GET'], strict_slashes=False)
+def list_species():
+    """도감 목록 조회 (검색/필터 지원)"""
+    if dataset is None or engine is None:
+        return jsonify({
+            'error': {
+                'code': 'DATASET_NOT_LOADED',
+                'message': '데이터셋이 로드되지 않았습니다',
+                'details': []
+            }
+        }), 500
+
+    try:
+        q = (request.args.get('q') or '').strip()
+        difficulty = request.args.get('difficulty')
+        species_type = request.args.get('type')
+        limit = request.args.get('limit', None)
+
+        df = dataset.copy()
+
+        # 검색(종_한글명 부분일치)
+        if q:
+            df = df[df['종_한글명'].astype(str).str.contains(q, case=False, na=False)]
+
+        # 난이도 필터(1~5)
+        if difficulty is not None and str(difficulty).strip() != '':
+            try:
+                d = int(difficulty)
+                df = df[df['사육_난이도_5단계'].astype('Int64') == d]
+            except Exception:
+                pass
+
+        # 종류 필터
+        if species_type is not None and str(species_type).strip() != '':
+            df = df[df['종류'].astype(str) == str(species_type).strip()]
+
+        # 정렬(이름)
+        df = df.sort_values(by=['종류', '사육_난이도_5단계', '종_한글명'], ascending=[True, True, True])
+
+        if limit is not None and str(limit).strip() != '':
+            try:
+                lim = max(1, min(500, int(limit)))
+                df = df.head(lim)
+            except Exception:
+                pass
+
+        items = []
+        for _, row in df.iterrows():
+            # 도감 카드에 필요한 최소 필드만 노출
+            item = {
+                '종_한글명': row.get('종_한글명'),
+                '종류': row.get('종류'),
+                '관상용_애완용': row.get('관상용_애완용'),
+                '사육_난이도_5단계': int(row.get('사육_난이도_5단계')) if pd.notna(row.get('사육_난이도_5단계')) else None,
+                '초기비용_등급_5단계': int(row.get('초기비용_등급_5단계')) if pd.notna(row.get('초기비용_등급_5단계')) else None,
+                '사육장_사이즈_3단계': int(row.get('사육장_사이즈_3단계')) if pd.notna(row.get('사육장_사이즈_3단계')) else None,
+                '활동패턴': row.get('활동패턴'),
+                '식성타입': row.get('식성타입'),
+                '외형태그': row.get('외형태그'),
+                '사진_URL': row.get('사진_URL') or '',
+                '사육_요약': engine.generate_care_summary(row)
+            }
+            # NaN -> None
+            for k, v in list(item.items()):
+                if pd.isna(v):
+                    item[k] = None
+            items.append(item)
+
+        return jsonify({
+            'total': int(len(df)),
+            'items': items
+        })
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({
+            'error': {
+                'code': 'INTERNAL_ERROR',
+                'message': f'서버 오류가 발생했습니다: {str(e)}',
+                'details': []
+            }
+        }), 500
+
+
 @app.route('/api/metadata', methods=['GET'])
 def get_metadata():
     """메타데이터 조회"""

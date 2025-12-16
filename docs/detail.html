@@ -3,27 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LizardMatch - 종 상세 정보</title>
+    <title>ReptiMatch AI - 종 상세 정보</title>
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🦎 LizardMatch</h1>
-            <p class="subtitle">파충류/양서류 종 추천 서비스</p>
-        </header>
+<body class="detail-ui">
+    <header class="main-header">
+        <div class="header-container">
+            <a class="logo" href="index.html" aria-label="ReptiMatch AI 홈으로">
+                <i class="ph-fill ph-leaf logo-icon" aria-hidden="true"></i>
+                <span class="logo-text">ReptiMatch AI</span>
+            </a>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">홈</a>
+                <a href="index.html" class="nav-link">매칭 찾기</a>
+                <a href="dex.html" class="nav-link">도감</a>
+            </nav>
+            <a href="index.html" class="btn-header">테스트 시작하기</a>
+        </div>
+    </header>
 
-        <main class="detail-container">
+    <main class="detail-shell">
+        <div class="detail-topbar">
+            <a href="#" id="backLink" class="detail-back">
+                <i class="ph ph-arrow-left" aria-hidden="true"></i>
+                결과로 돌아가기
+            </a>
+        </div>
+
+        <section class="detail-card">
             <div id="loadingMessage" class="loading-message">정보를 불러오는 중...</div>
             <div id="errorMessage" class="error-message" style="display: none;"></div>
             <div id="detailContent" class="detail-content">
                 <!-- 동적으로 생성됨 -->
             </div>
 
-            <div class="form-actions">
+            <div class="detail-actions">
                 <button type="button" id="backBtn" class="btn btn-secondary">결과로 돌아가기</button>
+                <button type="button" id="homeBtn" class="btn btn-secondary">홈으로</button>
             </div>
-        </main>
+        </section>
+    </main>
+
+    <!-- 이미지 자세히 보기(라이트박스) -->
+    <div id="imageViewer" class="image-viewer" aria-hidden="true">
+        <div class="image-viewer-backdrop" data-close="true" aria-hidden="true"></div>
+        <div class="image-viewer-dialog" role="dialog" aria-modal="true" aria-label="이미지 자세히 보기">
+            <button type="button" id="imageViewerClose" class="image-viewer-close" aria-label="닫기">
+                <i class="ph ph-x" aria-hidden="true"></i>
+            </button>
+            <a id="imageViewerOpenNew" class="image-viewer-open" href="#" target="_blank" rel="noopener noreferrer">
+                새 탭에서 열기
+            </a>
+            <div class="image-viewer-body">
+                <img id="imageViewerImg" alt="" />
+            </div>
+            <div id="imageViewerCaption" class="image-viewer-caption"></div>
+        </div>
     </div>
 
     <script src="app.js"></script>
@@ -310,12 +347,80 @@
             html += '</div>'; // species-detail
             
             detailContent.innerHTML = html;
+
+            // 이미지 자세히 보기 연결
+            const heroImg = detailContent.querySelector('.species-image');
+            if (heroImg && heroImg.src) {
+                heroImg.addEventListener('click', () => {
+                    openImageViewer(heroImg.src, heroImg.alt || '');
+                }, { once: true });
+            }
         }
 
-        // 결과로 돌아가기 버튼
-        document.getElementById('backBtn').addEventListener('click', () => {
+        // 결과로 돌아가기 버튼/링크
+        function goBackToResults() {
             window.history.back();
+        }
+        document.getElementById('backBtn').addEventListener('click', goBackToResults);
+        const backLink = document.getElementById('backLink');
+        if (backLink) {
+            backLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                goBackToResults();
+            });
+        }
+
+        // 홈으로 버튼
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = 'index.html';
         });
+
+        // 이미지 뷰어(라이트박스)
+        const imageViewer = document.getElementById('imageViewer');
+        const imageViewerImg = document.getElementById('imageViewerImg');
+        const imageViewerCaption = document.getElementById('imageViewerCaption');
+        const imageViewerClose = document.getElementById('imageViewerClose');
+        const imageViewerOpenNew = document.getElementById('imageViewerOpenNew');
+
+        function openImageViewer(src, altText) {
+            if (!imageViewer || !imageViewerImg) return;
+            imageViewerImg.src = src;
+            imageViewerImg.alt = altText || '종 사진';
+            if (imageViewerCaption) imageViewerCaption.textContent = altText || '';
+            if (imageViewerOpenNew) imageViewerOpenNew.href = src;
+
+            imageViewer.classList.add('is-open');
+            imageViewer.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageViewer() {
+            if (!imageViewer || !imageViewerImg) return;
+            imageViewer.classList.remove('is-open', 'is-zoomed');
+            imageViewer.setAttribute('aria-hidden', 'true');
+            imageViewerImg.src = '';
+            if (imageViewerCaption) imageViewerCaption.textContent = '';
+            document.body.style.overflow = '';
+        }
+
+        if (imageViewerClose) imageViewerClose.addEventListener('click', closeImageViewer);
+        if (imageViewer) {
+            imageViewer.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target && target.getAttribute && target.getAttribute('data-close') === 'true') {
+                    closeImageViewer();
+                }
+            });
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeImageViewer();
+        });
+        if (imageViewerImg) {
+            imageViewerImg.addEventListener('click', () => {
+                if (!imageViewer) return;
+                imageViewer.classList.toggle('is-zoomed');
+            });
+        }
     </script>
 </body>
 </html>

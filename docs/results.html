@@ -3,37 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LizardMatch - 추천 결과</title>
+    <title>ReptiMatch AI - 추천 결과</title>
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🦎 LizardMatch</h1>
-            <p class="subtitle">파충류/양서류 종 추천 서비스</p>
-        </header>
+<body class="results-ui">
+    <header class="main-header">
+        <div class="header-container">
+            <a class="logo" href="index.html" aria-label="ReptiMatch AI 홈으로">
+                <i class="ph-fill ph-leaf logo-icon" aria-hidden="true"></i>
+                <span class="logo-text">ReptiMatch AI</span>
+            </a>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">홈</a>
+                <a href="index.html" class="nav-link">매칭 찾기</a>
+                <a href="dex.html" class="nav-link">도감</a>
+            </nav>
+            <a href="index.html" class="btn-header">테스트 시작하기</a>
+        </div>
+    </header>
 
-        <main class="results-container">
-            <div id="loadingMessage" class="loading-message" style="display: none;">
-                추천 결과를 생성하는 중...
-            </div>
+    <main class="results-shell">
+        <a href="#" id="restartLink" class="results-back">
+            <i class="ph ph-arrow-left" aria-hidden="true"></i>
+            다시 테스트하기
+        </a>
 
-            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        <div id="loadingMessage" class="loading-message" style="display: none;">
+            추천 결과를 생성하는 중...
+        </div>
 
-            <div id="resultsContent" class="results-content">
-                <!-- 동적으로 생성됨 -->
-            </div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
 
-            <div class="form-actions">
-                <button type="button" id="restartBtn" class="btn btn-secondary">설문 다시하기</button>
-            </div>
-        </main>
-    </div>
+        <div id="resultsContent" class="results-content">
+            <!-- 동적으로 생성됨 -->
+        </div>
+    </main>
 
     <script src="app.js"></script>
     <script>
         // 페이지 로드 시 결과 표시
         document.addEventListener('DOMContentLoaded', () => {
+            // 다시 테스트하기
+            const restartLink = document.getElementById('restartLink');
+            if (restartLink) {
+                restartLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    sessionStorage.clear();
+                    window.location.href = 'survey_page1.html?reset=true';
+                });
+            }
+
             // URL 파라미터에서 결과 데이터 가져오기
             const urlParams = new URLSearchParams(window.location.search);
             const resultsJson = urlParams.get('results');
@@ -64,14 +85,6 @@
                     document.getElementById('errorMessage').style.display = 'block';
                 }
             }
-        });
-
-        // 설문 다시하기 버튼
-        document.getElementById('restartBtn').addEventListener('click', () => {
-            // sessionStorage 초기화
-            sessionStorage.clear();
-            // index.html로 이동
-            window.location.href = 'index.html?reset=true';
         });
     </script>
 </body>
