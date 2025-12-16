@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LizardMatch - 파충류 주인 찾기 서비스</title>
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="survey-ui">
+    <header class="main-header">
+        <div class="header-container">
+            <a class="logo" href="index.html" aria-label="ReptiMatch AI 홈으로">
+                <i class="ph-fill ph-leaf logo-icon" aria-hidden="true"></i>
+                <span class="logo-text">ReptiMatch AI</span>
+            </a>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">홈</a>
+                <a href="survey_page1.html" class="nav-link active">매칭 찾기</a>
+                <a href="dex.html" class="nav-link">도감</a>
+            </nav>
+            <a href="survey_page1.html" class="btn-header">테스트 시작하기</a>
+        </div>
+    </header>
+
+    <main class="survey-shell">
+        <div class="survey-progress">
+            <span class="progress-text">질문 1 / 4</span>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <span class="progress-percent">25%</span>
+        </div>
+
+        <section class="survey-card">
+            <form id="surveyForm" class="survey-form">
+                <div class="question-group">
+                    <h2>Q1. 어떤 종류를 선호하시나요?</h2>
+                    <p class="question-description">
+                        관심 있는 파충류/양서류 종류를 선택하세요. 복수 선택이 가능하며, 각 종류별로 개별 중요도를 설정할 수 있습니다.
+                        선택하지 않은 종류는 추천 결과에서 제외됩니다.
+                    </p>
+                    
+                    <div class="option-cards" id="speciesCheckboxes">
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="도마뱀">
+                            <div class="option-body">
+                                <div><div class="option-title">도마뱀</div><div class="option-desc">활동적이고 관찰 재미가 좋은 편</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="게코">
+                            <div class="option-body">
+                                <div><div class="option-title">게코</div><div class="option-desc">입문자에게 인기 많은 종이 많아요</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="육지 거북">
+                            <div class="option-body">
+                                <div><div class="option-title">육지 거북</div><div class="option-desc">긴 수명과 안정적인 루틴</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="수생 거북">
+                            <div class="option-body">
+                                <div><div class="option-title">수생 거북</div><div class="option-desc">수질 관리가 중요해요</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="반수생 거북">
+                            <div class="option-body">
+                                <div><div class="option-title">반수생 거북</div><div class="option-desc">육지·물 환경을 함께 고려</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="개구리">
+                            <div class="option-body">
+                                <div><div class="option-title">개구리</div><div class="option-desc">습도 관리/은신 환경이 핵심</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="도롱뇽">
+                            <div class="option-body">
+                                <div><div class="option-title">도롱뇽</div><div class="option-desc">수온/수질, 조용한 환경 선호</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="카멜레온">
+                            <div class="option-body">
+                                <div><div class="option-title">카멜레온</div><div class="option-desc">환기/분무/조명 세팅이 중요</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="checkbox" name="종류" value="뱀">
+                            <div class="option-body">
+                                <div><div class="option-title">뱀</div><div class="option-desc">개체 성향·급여 방식이 포인트</div></div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div id="speciesWeightsContainer" class="weights-container" style="display: none;">
+                        <h3>종류별 중요도 설정</h3>
+                        <div id="speciesWeights"></div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="nextBtn" class="btn btn-primary" disabled>다음</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="survey_navigation.js"></script>
+    <script src="form_utils.js"></script>
+    <script>
+        // 종류 선택 시 중요도 설정 표시
+        const speciesCheckboxes = document.querySelectorAll('input[name="종류"]');
+        const speciesWeightsContainer = document.getElementById('speciesWeightsContainer');
+        const speciesWeights = document.getElementById('speciesWeights');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateSpeciesWeights() {
+            const selected = Array.from(speciesCheckboxes).filter(cb => cb.checked);
+            
+            if (selected.length === 0) {
+                speciesWeightsContainer.style.display = 'none';
+                nextBtn.disabled = true;
+                return;
+            }
+
+            speciesWeightsContainer.style.display = 'block';
+            speciesWeights.innerHTML = '';
+
+            selected.forEach(checkbox => {
+                const speciesType = checkbox.value;
+                const weightGroup = document.createElement('div');
+                weightGroup.className = 'weight-group';
+                weightGroup.innerHTML = `
+                    <label>${speciesType} 중요도:</label>
+                    <div class="importance-radio-group">
+                        <label><input type="radio" name="종류_가중치_${speciesType}" value="0"> 0</label>
+                        <label><input type="radio" name="종류_가중치_${speciesType}" value="1"> 1</label>
+                        <label><input type="radio" name="종류_가중치_${speciesType}" value="5"> 5</label>
+                        <label><input type="radio" name="종류_가중치_${speciesType}" value="10" checked> 10</label>
+                        <label><input type="radio" name="종류_가중치_${speciesType}" value="15"> 15</label>
+                        <label><input type="radio" name="종류_가중치_${speciesType}" value="20"> 20</label>
+                    </div>
+                `;
+                speciesWeights.appendChild(weightGroup);
+            });
+
+            nextBtn.disabled = false;
+        }
+
+        speciesCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updateSpeciesWeights);
+        });
+
+        // 페이지 로드 시 저장된 데이터 복원
+        document.addEventListener('DOMContentLoaded', () => {
+            restoreCurrentPageData();
+            updateSpeciesWeights();
+            updateProgressIndicator();
+        });
+
+        // 다음 버튼 클릭
+        nextBtn.addEventListener('click', () => {
+            saveCurrentPageData();
+            goToNextPage();
+        });
+    </script>
+</body>
+</html>
+
+

@@ -1,4 +1,7 @@
 /* 전역 스타일 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Noto+Sans+KR:wght@400;500;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -20,15 +23,36 @@
     --radius-card: 16px;
     --shadow-card: 0 18px 40px rgba(0,0,0,0.35);
     --shadow-soft: 0 10px 25px rgba(0,0,0,0.15);
+
+    /* 폰트 시스템 */
+    --font-title: "Cormorant Garamond","Noto Serif KR","Times New Roman",serif;
+    --font-sub: "Pretendard","Noto Sans KR",system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    --font-body: "Noto Sans KR","Pretendard",system-ui,-apple-system,"Segoe UI",Roboto,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
     background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
     min-height: 100vh;
     padding: 20px;
     color: #2f3b3e;
 }
+
+h1,h2,h3,h4,h5,h6,
+p,span,a,li,label,small,strong,em,
+button,input,select,textarea {
+    font-family: inherit;
+}
+
+button,input,select,textarea {
+    font-size: inherit;
+}
+
+h1{ font-family: var(--font-title); font-weight: 700; letter-spacing: -0.01em; }
+h2,h3{ font-family: var(--font-sub); font-weight: 600; }
+h4,h5,h6{ font-family: var(--font-sub); font-weight: 600; }
 
 .container {
     max-width: 1200px;
@@ -1770,5 +1794,770 @@ body.dex-ui {
     .dex-head { flex-direction: column; align-items: stretch; }
     .dex-controls { justify-content: flex-start; }
     .dex-form-row.two, .dex-form-row.three { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   홈페이지/설문 카드 UI (GitHub Pages docs/용)
+   - frontend/styles.css의 핵심 블록을 동기화
+   ============================================ */
+
+/* ============================================
+   홈페이지 스타일 (랜딩 페이지)
+   ============================================ */
+
+body.homepage {
+    background: #f5f5f5;
+    padding: 0;
+    margin: 0;
+    font-family: var(--font-body);
+}
+
+/* 메인 헤더 */
+.main-header {
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #1b3a2e;
+    text-decoration: none;
+}
+
+.logo-icon {
+    font-size: 30px;
+    line-height: 1;
+    flex-shrink: 0;
+    color: #2f6b4f;
+}
+
+.logo-text {
+    color: #1b3a2e;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.main-nav {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.nav-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #2f6b4f;
+}
+
+.btn-header {
+    background: #4A7C59;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.3s;
+}
+
+.btn-header:hover {
+    background: #3a6a49;
+}
+
+/* 히어로 섹션 */
+.hero-section {
+    background: #f5f5f5;
+    padding: 80px 24px;
+}
+
+.hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.feature-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #e8f5e9;
+    color: #1b2624;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    width: fit-content;
+}
+
+.badge-icon {
+    font-size: 1rem;
+    color: #2f6b4f;
+}
+
+/* Phosphor 아이콘 정렬 */
+.ph {
+    line-height: 1;
+}
+
+.btn-hero-primary .ph {
+    margin-left: 8px;
+    vertical-align: -0.12em;
+}
+
+/* 홈 아이콘(Phosphor Fill)도 줄맞춤 */
+.btn-hero-primary .ph-fill,
+.badge-icon.ph-fill,
+.card-icon .ph-fill,
+.logo-icon.ph-fill {
+    line-height: 1;
+    vertical-align: -0.12em;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1b2624;
+    margin: 0;
+}
+
+.highlight-green {
+    color: #4A7C59;
+}
+
+.hero-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+    position: relative;
+    z-index: 5;
+}
+
+.btn-hero-primary {
+    background: #4A7C59;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 6;
+    pointer-events: auto;
+}
+
+.btn-hero-primary:hover {
+    background: #3a6a49;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+}
+
+.btn-hero-secondary {
+    background: white;
+    color: #1b2624;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 6;
+    pointer-events: auto;
+}
+
+.btn-hero-secondary:hover {
+    border-color: #4A7C59;
+    color: #4A7C59;
+}
+
+.hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-photo {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 24px;
+    box-shadow: 0 28px 60px rgba(0, 0, 0, 0.35);
+    object-fit: cover;
+    aspect-ratio: 4 / 5;
+}
+
+/* 이미지 애니메이션 (홈) */
+body.homepage .hero-photo,
+body.homepage .feature-photo {
+    will-change: transform;
+    transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+body.homepage .hero-image:hover .hero-photo,
+body.homepage .hero-image:focus-within .hero-photo {
+    transform: scale(1.04);
+    box-shadow: 0 34px 70px rgba(0, 0, 0, 0.38);
+}
+
+body.homepage .feature-card:hover .feature-photo,
+body.homepage .feature-card:focus-within .feature-photo {
+    transform: scale(1.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.homepage .hero-photo,
+    body.homepage .feature-photo {
+        transition: none !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}
+
+/* ============================================
+   설문 UI (스크린샷 스타일)
+   ============================================ */
+
+body.survey-ui {
+    background: #f5f5f5;
+    padding: 0;
+    margin: 0;
+    font-family: var(--font-body);
+}
+
+.survey-shell {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 44px 24px 80px;
+}
+
+.survey-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 26px 0 18px;
+    color: #5f6b73;
+    font-weight: 600;
+}
+
+.survey-progress .progress-text,
+.survey-progress .progress-percent {
+    font-size: 0.95rem;
+}
+
+.survey-progress .progress-bar {
+    flex: 1;
+    height: 10px;
+    background: #d8e1dc;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 0 12px;
+}
+
+.survey-progress .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #2f6b4f;
+    transition: width 320ms ease;
+}
+
+.survey-card {
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 18px 50px rgba(15, 32, 39, 0.12);
+    padding: 34px;
+    animation: surveyFadeUp 260ms ease-out both;
+}
+
+@keyframes surveyFadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+body.survey-ui .question-group {
+    background: transparent;
+    border-left: none;
+    padding: 0;
+    margin-bottom: 28px;
+}
+
+body.survey-ui .question-group h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #1b2624;
+}
+
+body.survey-ui .question-description {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-bottom: 18px;
+}
+
+/* 중요도 칩(Chip) */
+body.survey-ui .importance-group {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #edf1f5;
+}
+
+body.survey-ui .importance-group > label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #5f6b73;
+}
+
+body.survey-ui .importance-help {
+    display: block;
+    margin-top: 4px;
+    font-weight: 400;
+    color: #8a959f;
+}
+
+body.survey-ui .importance-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+body.survey-ui .importance-radio-group label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 2px solid #e2e7e4;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 0.92rem;
+    color: #1b2624;
+    transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+    user-select: none;
+}
+
+body.survey-ui .importance-radio-group label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+body.survey-ui .importance-radio-group label:hover {
+    transform: scale(1.01);
+    border-color: #cfe1d7;
+    box-shadow: 0 10px 22px rgba(15, 32, 39, 0.06);
+}
+
+body.survey-ui .importance-radio-group label:has(input[type="radio"]:checked) {
+    border-color: #2f6b4f;
+    background: #f3faf5;
+    font-weight: 700;
+}
+
+body.survey-ui .importance-radio-group label:has(input[type="radio"]:checked)::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #2f6b4f;
+    display: inline-block;
+}
+
+/* 카드형 옵션 */
+.option-cards {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.option-card {
+    display: block;
+    cursor: pointer;
+}
+
+.option-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.option-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 18px;
+    border: 2px solid #e2e7e4;
+    border-radius: 14px;
+    background: #ffffff;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.option-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1b2624;
+    margin-bottom: 6px;
+}
+
+.option-desc {
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+.option-check {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: #eaf3ee;
+    display: grid;
+    place-items: center;
+    color: #2f6b4f;
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.option-check .ph,
+.option-check .ph-fill {
+    font-size: 22px;
+}
+
+.option-card:hover .option-body {
+    transform: scale(1.01);
+    box-shadow: 0 14px 30px rgba(15, 32, 39, 0.08);
+    border-color: #cfe1d7;
+}
+
+.option-card input:checked + .option-body {
+    border-color: #2f6b4f;
+    background: #f3faf5;
+}
+
+.option-card input:checked + .option-body .option-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+body.survey-ui .form-actions {
+    border-top: none;
+    padding-top: 0;
+    justify-content: flex-end;
+    gap: 14px;
+}
+
+body.survey-ui .btn-primary {
+    background: #2f6b4f;
+}
+
+body.survey-ui .btn-primary:hover:not(:disabled) {
+    box-shadow: 0 10px 22px rgba(47, 107, 79, 0.25);
+}
+
+/* 설문 제출 후 "분석 중" 오버레이 */
+.analysis-overlay {
+    position: fixed;
+    inset: 0;
+    background: #f5f5f5;
+    display: grid;
+    place-items: center;
+    z-index: 900;
+    padding: 24px;
+}
+
+.analysis-box {
+    width: min(720px, 100%);
+    text-align: center;
+    color: #1b2624;
+}
+
+.analysis-spinner {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 18px;
+    position: relative;
+}
+
+.analysis-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 4px solid #d8e1dc;
+    border-top-color: #2f6b4f;
+    animation: analysisSpin 1s linear infinite;
+}
+
+.analysis-leaf {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    color: #2f6b4f;
+}
+
+@keyframes analysisSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.analysis-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.analysis-sub {
+    font-size: 0.98rem;
+    color: #6c757d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .analysis-ring { animation: none !important; }
+}
+
+@media (max-width: 768px) {
+    .survey-shell { padding: 26px 16px 70px; }
+    .survey-card { padding: 22px; }
+    body.survey-ui .question-group h2 { font-size: 1.6rem; }
+    .survey-progress .progress-bar { margin: 0 8px; }
+}
+
+/* 왜 ReptiMatch인가요 섹션 */
+.why-section {
+    background: white;
+    padding: 80px 24px;
+}
+
+.why-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1b2624;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.section-subtitle {
+    font-size: 1.125rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 60px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.feature-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.feature-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    border-color: #4A7C59;
+}
+
+.card-image {
+    margin-bottom: 20px;
+}
+
+.feature-photo {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+    color: #2f6b4f;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1b2624;
+    margin-bottom: 12px;
+}
+
+.card-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+}
+
+/* 시작 섹션 */
+.start-section {
+    background: #4A7C59;
+    padding: 100px 24px;
+    text-align: center;
+}
+
+.start-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.start-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.start-description {
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 32px;
+}
+
+.btn-start {
+    background: #E8E0D4;
+    color: #1b2624;
+    padding: 16px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.125rem;
+    display: inline-block;
+    transition: all 0.3s;
+}
+
+.btn-start:hover {
+    background: #d4c9b8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 푸터 */
+.main-footer {
+    background: #1b2624;
+    color: white;
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .hero-container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .feature-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .main-nav {
+        gap: 16px;
+    }
+
+    .hero-section {
+        padding: 40px 16px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .btn-hero-primary,
+    .btn-hero-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .why-section {
+        padding: 60px 16px;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .start-section {
+        padding: 60px 16px;
+    }
+
+    .start-title {
+        font-size: 2rem;
+    }
 }
 

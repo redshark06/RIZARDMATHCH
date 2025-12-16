@@ -887,6 +887,8 @@ header h1 .ph {
     display: flex;
     gap: 16px;
     margin-top: 8px;
+    position: relative;
+    z-index: 5;
 }
 
 .btn-hero-primary {
@@ -898,6 +900,9 @@ header h1 .ph {
     font-weight: 600;
     font-size: 1rem;
     transition: all 0.3s;
+    position: relative;
+    z-index: 6;
+    pointer-events: auto;
 }
 
 .btn-hero-primary:hover {
@@ -916,6 +921,9 @@ header h1 .ph {
     font-size: 1rem;
     border: 2px solid #ddd;
     transition: all 0.3s;
+    position: relative;
+    z-index: 6;
+    pointer-events: auto;
 }
 
 .btn-hero-secondary:hover {

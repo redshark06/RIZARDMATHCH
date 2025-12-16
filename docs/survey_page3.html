@@ -4,35 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LizardMatch - 목적 및 취향</title>
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🦎 LizardMatch</h1>
-            <p class="subtitle">파충류/양서류 종 추천 서비스</p>
-        </header>
+<body class="survey-ui">
+    <header class="main-header">
+        <div class="header-container">
+            <a class="logo" href="index.html" aria-label="ReptiMatch AI 홈으로">
+                <i class="ph-fill ph-leaf logo-icon" aria-hidden="true"></i>
+                <span class="logo-text">ReptiMatch AI</span>
+            </a>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">홈</a>
+                <a href="survey_page1.html" class="nav-link active">매칭 찾기</a>
+                <a href="dex.html" class="nav-link">도감</a>
+            </nav>
+            <a href="survey_page1.html" class="btn-header">테스트 시작하기</a>
+        </div>
+    </header>
 
-        <div class="progress-indicator">
-            <span class="progress-text">3 / 4</span>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 75%"></div>
-            </div>
+    <main class="survey-shell">
+        <div class="survey-progress">
+            <span class="progress-text">질문 3 / 4</span>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <span class="progress-percent">75%</span>
         </div>
 
-        <main class="survey-container">
+        <section class="survey-card">
             <form id="surveyForm" class="survey-form">
                 <div class="question-group">
                     <h2>Q8. 사육 목적</h2>
                     <p class="question-description">
                         어떤 목적으로 키우고 싶으신지 선택하세요. 관상용은 보는 것을 즐기는 용도, 애완용은 교감과 놀이를 즐기는 용도입니다.
                     </p>
-                    <select name="관상용_애완용" class="form-select">
-                        <option value="">선택하세요</option>
-                        <option value="관상용">관상용 - 보는 것을 즐기는 용도</option>
-                        <option value="애완용">애완용 - 교감과 놀이를 즐기는 용도</option>
-                        <option value="둘 다">둘 다 - 관상과 애완 모두 가능</option>
-                    </select>
+                    <div class="option-cards">
+                        <label class="option-card">
+                            <input type="radio" name="관상용_애완용" value="">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">상관없음</div>
+                                    <div class="option-desc">목적은 크게 정해두지 않았어요.</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="관상용_애완용" value="관상용">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">관상용</div>
+                                    <div class="option-desc">보기 좋은 외형/행동을 즐기고 싶어요.</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="관상용_애완용" value="애완용">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">애완용</div>
+                                    <div class="option-desc">교감과 핸들링을 더 중요하게 생각해요.</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="관상용_애완용" value="둘 다">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">둘 다</div>
+                                    <div class="option-desc">관상도 하고 교감도 하고 싶어요.</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                    </div>
                     <div class="importance-group">
                         <label>중요도: <span class="importance-help">이 질문이 추천 결과에 얼마나 영향을 미칠지 설정합니다. 높을수록 더 중요하게 반영됩니다.</span></label>
                         <div class="importance-radio-group">
@@ -51,12 +98,48 @@
                     <p class="question-description">
                         어떤 종류의 먹이를 주는지에 대한 선호도를 의미합니다. 먹이 준비의 편의성과 비용을 고려할 수 있습니다.
                     </p>
-                    <select name="식성타입" class="form-select">
-                        <option value="">상관없음</option>
-                        <option value="잡식">잡식 - 식물과 동물 모두 섭취</option>
-                        <option value="초식">초식 - 식물만 섭취</option>
-                        <option value="육식">육식 - 동물성 먹이만 섭취</option>
-                    </select>
+                    <div class="option-cards">
+                        <label class="option-card">
+                            <input type="radio" name="식성타입" value="">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">상관없음</div>
+                                    <div class="option-desc">식성은 크게 상관 없어요.</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="식성타입" value="잡식">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">잡식</div>
+                                    <div class="option-desc">곤충/사료/과일·채소 등 다양하게 가능</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="식성타입" value="초식">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">초식</div>
+                                    <div class="option-desc">채소·과일 중심으로 급여하는 편이 좋아요</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="식성타입" value="육식">
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">육식</div>
+                                    <div class="option-desc">곤충/동물성 먹이 중심이 괜찮아요</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
+                        </label>
+                    </div>
                     <div class="importance-group">
                         <label>중요도: <span class="importance-help">이 질문이 추천 결과에 얼마나 영향을 미칠지 설정합니다. 높을수록 더 중요하게 반영됩니다.</span></label>
                         <div class="importance-radio-group">
@@ -75,18 +158,36 @@
                     <p class="question-description">
                         선호하는 외형의 특징을 선택하세요. 복수 선택이 가능하며, 선택한 태그와 일치하는 종을 우선 추천해드립니다.
                     </p>
-                    <div class="checkbox-group">
-                        <label class="checkbox-item">
+                    <div class="option-cards">
+                        <label class="option-card">
                             <input type="checkbox" name="외형태그" value="귀엽다">
-                            <span>귀엽다 - 사랑스럽고 귀여운 외형</span>
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">귀엽다</div>
+                                    <div class="option-desc">사랑스럽고 귀여운 외형</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
                         </label>
-                        <label class="checkbox-item">
+                        <label class="option-card">
                             <input type="checkbox" name="외형태그" value="화려하다">
-                            <span>화려하다 - 눈에 띄고 화사한 색상과 패턴</span>
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">화려하다</div>
+                                    <div class="option-desc">눈에 띄는 색상과 패턴</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
                         </label>
-                        <label class="checkbox-item">
+                        <label class="option-card">
                             <input type="checkbox" name="외형태그" value="멋있다">
-                            <span>멋있다 - 강인하고 멋진 외형</span>
+                            <div class="option-body">
+                                <div>
+                                    <div class="option-title">멋있다</div>
+                                    <div class="option-desc">강인하고 멋진 느낌</div>
+                                </div>
+                                <div class="option-check"><i class="ph-fill ph-check-circle" aria-hidden="true"></i></div>
+                            </div>
                         </label>
                     </div>
                     <div class="importance-group">
@@ -107,30 +208,44 @@
                     <button type="button" id="nextBtn" class="btn btn-primary">다음</button>
                 </div>
             </form>
-        </main>
-    </div>
+        </section>
+    </main>
 
     <script src="survey_navigation.js"></script>
     <script>
         // 페이지 로드 시 저장된 데이터 복원
         document.addEventListener('DOMContentLoaded', () => {
             restoreCurrentPageData();
+            updateProgressIndicator();
             setupAutoImportanceReset();
         });
 
         // "상관없음" 선택 시 중요도 자동 0 설정
         function setupAutoImportanceReset() {
-            const selects = document.querySelectorAll('.form-select');
-            selects.forEach(select => {
-                select.addEventListener('change', function() {
-                    if (this.value === '') {
-                        // "상관없음" 선택 시 해당 질문의 중요도를 0으로 설정
-                        const questionName = this.name;
-                        const importanceName = questionName + '_중요도';
-                        const importanceRadio = document.querySelector(`input[name="${importanceName}"][value="0"]`);
-                        if (importanceRadio) {
-                            importanceRadio.checked = true;
+            const mapping = {
+                '관상용_애완용': '관상용_애완용_중요도',
+                '식성타입': '식성타입_중요도'
+            };
+
+            Object.keys(mapping).forEach(questionName => {
+                document.querySelectorAll(`input[name="${questionName}"]`).forEach(input => {
+                    input.addEventListener('change', () => {
+                        if (input.value === '') {
+                            const importanceName = mapping[questionName];
+                            const importanceRadio = document.querySelector(`input[name="${importanceName}"][value="0"]`);
+                            if (importanceRadio) importanceRadio.checked = true;
                         }
+                    });
+                });
+            });
+
+            // 외형태그: 아무것도 선택하지 않으면 중요도 0으로
+            document.querySelectorAll('input[name="외형태그"]').forEach(cb => {
+                cb.addEventListener('change', () => {
+                    const anyChecked = Array.from(document.querySelectorAll('input[name="외형태그"]')).some(x => x.checked);
+                    if (!anyChecked) {
+                        const importanceRadio = document.querySelector('input[name="외형태그_중요도"][value="0"]');
+                        if (importanceRadio) importanceRadio.checked = true;
                     }
                 });
             });
