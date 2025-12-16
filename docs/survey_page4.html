@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LizardMatch - 최종 확인</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦎 LizardMatch</h1>
+            <p class="subtitle">파충류/양서류 종 추천 서비스</p>
+        </header>
+
+        <div class="progress-indicator">
+            <span class="progress-text">4 / 4</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%"></div>
+            </div>
+        </div>
+
+        <main class="survey-container">
+            <div class="review-container">
+                <h2>설문 내용 확인</h2>
+                <div id="reviewContent" class="review-content">
+                    <!-- 동적으로 생성됨 -->
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" id="prevBtn" class="btn btn-secondary">이전</button>
+                <button type="button" id="submitBtn" class="btn btn-primary">추천 받기</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="survey_navigation.js"></script>
+    <script src="form_utils.js"></script>
+    <script>
+        // 페이지 로드 시 저장된 데이터 복원 및 확인 내용 표시
+        document.addEventListener('DOMContentLoaded', () => {
+            restoreCurrentPageData();
+            displayReview();
+        });
+
+        // 이전 버튼
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            goToPreviousPage();
+        });
+
+        // 제출 버튼
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            handleFinalSubmit();
+        });
+
+        function displayReview() {
+            const allData = collectAllPageData();
+            const reviewContent = document.getElementById('reviewContent');
+            
+            let html = '<div class="review-section">';
+            html += '<h3>선택한 종류</h3>';
+            html += '<p>' + (allData.preferences.종류 ? allData.preferences.종류.join(', ') : '없음') + '</p>';
+            html += '</div>';
+
+            // 각 질문별로 확인 내용 표시
+            const questions = [
+                { key: '사육_난이도_5단계', label: '사육 난이도' },
+                { key: '초기비용_등급_5단계_max', label: '초기 비용' },
+                { key: '사육장_사이즈_3단계_max', label: '사육장 크기' },
+                { key: '활동패턴', label: '활동 패턴' },
+                { key: '먹이빈도_등급_prefer', label: '먹이 급여 부담' },
+                { key: '핸들링적합도_5단계_prefer', label: '핸들링 적합도' },
+                { key: '관상용_애완용', label: '사육 목적' },
+                { key: '식성타입', label: '식성 타입' },
+                { key: '외형태그', label: '외형 태그' }
+            ];
+
+            questions.forEach(q => {
+                const value = allData.preferences[q.key];
+                if (value !== undefined && value !== null && value !== '') {
+                    html += `<div class="review-section">`;
+                    html += `<h3>${q.label}</h3>`;
+                    html += `<p>${Array.isArray(value) ? value.join(', ') : value}</p>`;
+                    html += `</div>`;
+                }
+            });
+
+            reviewContent.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+
